@@ -41,6 +41,7 @@ def main():
     data = get_data(file_name)
     reporte= generate_report(data)
     save_data(reporte, file_name)
+    print("hola")
 
 
 if __name__=='__main__':
