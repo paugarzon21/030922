@@ -23,31 +23,31 @@ def get_data(file_name):
     return data
 
 def delete_duplicates(data):
-    data_1=data.drop_duplicates()
-    data_1.reset_index(inplace=True, drop=True)
-    return data_1
+    data=data.drop_duplicates()
+    data.reset_index(inplace=True, drop=True)
+    return data
 
-def delete_nulls_string(data_1, col):
-    data_1[col].fillna('SIN_DATO', inplace= True) #preguntar si se puede sin pedir columna. 
-    return data_1
+def delete_nulls_string(data, col):
+    data[col].fillna('SIN_DATO', inplace= True) #preguntar si se puede sin pedir columna. 
+    return data
 
-def delete_nulls_int(data_2, col):
-    data_2[col].replace({'SIN_DATO': np.nan}, inplace= True)
+def delete_nulls_int(data, col):
+    data[col].replace({'SIN_DATO': np.nan}, inplace= True)
     f= lambda x:np.nan if pd.isna(x) else int(x)
-    data_2[col]=data_2[col].apply(f)
-    return data_2
+    data[col]=data[col].apply(f)
+    return data
 
-def standar_time(data_3, col):
+def standar_time(data, col):
     lista_fechas=list()
-    for fecha in data_3[col]:
+    for fecha in data[col]:
         try:
             new_fecha=parse(fecha)
         except Exception as e:
             new_fecha=pd.to_datetime(fecha, errors='coerce')
         lista_fechas.append(new_fecha)
     
-    data_3[col+'CORREGIDO']=lista_fechas
-    return data_3
+    data[col+'CORREGIDO']=lista_fechas
+    return data
 
 def save_data(dataclean,filename):
     out_name = 'limpieza_' + filename
@@ -57,16 +57,12 @@ def save_data(dataclean,filename):
 def main():
     file_name="llamadas123_julio_2022.csv"
     data = get_data(file_name)
-    data_1= delete_duplicates(data)
-    col1='UNIDAD'
-    data_2=delete_nulls_string(data_1, col1)
-    col2='EDAD'
-    data_3=delete_nulls_int(data_2, col2)
-    col3='FECHA_INICIO_DESPLAZAMIENTO_MOVIL'
-    data_4=standar_time(data_3, col3)
-    col4='RECEPCION'
-    data_5=standar_time(data_4, col4)
-    save_data(data_5, file_name)
+    data= delete_duplicates(data)
+    data=delete_nulls_string(data, col='UNIDAD')
+    data=delete_nulls_int(data, col='EDAD')
+    data=standar_time(data, col='FECHA_INICIO_DESPLAZAMIENTO_MOVIL')
+    data=standar_time(data, col='RECEPCION')
+    save_data(data, file_name)
 
 if __name__=='__main__':
     main()
