@@ -63,6 +63,7 @@ def main():
     data=standar_time(data, col='FECHA_INICIO_DESPLAZAMIENTO_MOVIL')
     data=standar_time(data, col='RECEPCION')
     save_data(data, file_name)
+    print("ejemplo")
 
 if __name__=='__main__':
     main()
